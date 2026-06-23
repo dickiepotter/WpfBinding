@@ -7,6 +7,8 @@
 
 *By Richard Potter. The source discussed here lives in this repository under `src/`.*
 
+![The demo window: live clock, network flag, timed binding and converters — all driven from XAML](docs/images/demo.png)
+
 **Contents**
 
 - [Introduction](#introduction)
