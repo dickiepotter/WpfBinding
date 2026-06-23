@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/RP.Wpf.Bindings.Demo/RP.Wpf.Bindings.Demo.csproj" />
+    <Project Path="src/RP.Wpf.Bindings/RP.Wpf.Bindings.csproj" />
+  </Folder>
+</Solution>

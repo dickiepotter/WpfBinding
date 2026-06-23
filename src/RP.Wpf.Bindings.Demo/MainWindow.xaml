@@ -1,0 +1,68 @@
+<Window x:Class="RP.Wpf.Bindings.Demo.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:rp="https://schemas.richardpotter.dev/wpf"
+        xmlns:media="clr-namespace:System.Windows.Media;assembly=PresentationCore"
+        xmlns:local="clr-namespace:RP.Wpf.Bindings.Demo"
+        Title="Self-updating Bindings" Height="520" Width="480">
+
+    <Window.Resources>
+        <!-- A change-free source for the TimedBinding examples. -->
+        <local:Clock x:Key="Clock" />
+
+        <!-- Converters used below. -->
+        <rp:ColorToBrushConverter x:Key="ColorToBrush" />
+        <rp:ObjectToTypeStringConverter x:Key="ObjectToType" />
+    </Window.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="14">
+
+            <Expander Header="NetworkAvailable — a self-updating bool" IsExpanded="True" Margin="0,0,0,8">
+                <StackPanel Margin="8">
+                    <!-- Re-ticks itself whenever the machine's connectivity changes. -->
+                    <CheckBox IsChecked="{rp:NetworkAvailable}" IsEnabled="False" Content="Network is available" />
+                </StackPanel>
+            </Expander>
+
+            <Expander Header="CurrentDateTime — a self-updating string" IsExpanded="True" Margin="0,0,0,8">
+                <StackPanel Margin="8">
+                    <!-- Polls DateTime.Now on a timer; the second one updates 20× a second. -->
+                    <TextBlock Text="{rp:CurrentDateTime}" />
+                    <TextBlock FontFamily="Consolas"
+                               Text="{rp:CurrentDateTime Delay=0:0:0.05, StringFormat=HH:mm:ss.fff}" />
+                </StackPanel>
+            </Expander>
+
+            <Expander Header="TimedBinding — refresh a notify-free source" IsExpanded="True" Margin="0,0,0,8">
+                <StackPanel Margin="8">
+                    <!-- Clock.Now raises no PropertyChanged, so a plain Binding would freeze. -->
+                    <TextBlock Text="{rp:TimedBinding Source={StaticResource Clock}, Path=Now}" />
+                    <!-- The same live binding, formatted through ObjectToStringConverter. -->
+                    <TextBlock FontFamily="Consolas"
+                               Text="{rp:TimedBinding Source={StaticResource Clock}, Path=Now,
+                                                      Converter={rp:ObjectToStringConverter 'dddd  HH:mm:ss'}}" />
+                </StackPanel>
+            </Expander>
+
+            <Expander Header="Converters" IsExpanded="True">
+                <StackPanel Margin="8">
+                    <TextBlock Text="ColorToBrushConverter (WPF Color → Brush):" Margin="0,0,0,4" />
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                        <Rectangle Width="22" Height="22" Margin="0,0,4,0"
+                                   Fill="{Binding Source={x:Static media:Colors.Tomato}, Converter={StaticResource ColorToBrush}}" />
+                        <Rectangle Width="22" Height="22" Margin="0,0,4,0"
+                                   Fill="{Binding Source={x:Static media:Colors.MediumSeaGreen}, Converter={StaticResource ColorToBrush}}" />
+                        <Rectangle Width="22" Height="22"
+                                   Fill="{Binding Source={x:Static media:Colors.SteelBlue}, Converter={StaticResource ColorToBrush}}" />
+                    </StackPanel>
+
+                    <TextBlock Text="ObjectToTypeStringConverter (value → type name):" Margin="0,0,0,4" />
+                    <TextBlock FontFamily="Consolas"
+                               Text="{Binding Source={StaticResource Clock}, Converter={StaticResource ObjectToType}}" />
+                </StackPanel>
+            </Expander>
+
+        </StackPanel>
+    </ScrollViewer>
+</Window>
